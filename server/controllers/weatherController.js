@@ -13,13 +13,15 @@ let majorCities = [
 let majorCitiesWeather = [];
 let majorCitiesWeatherSet = new Set();
 
-let weather_base_URL = `http://api.weatherapi.com/v1/current.json`;
+let weather_base_URL = `http://api.weatherapi.com/v1`;
 
 module.exports = {
   getWeatherForMajorCities: async (req, res) => {
     await majorCities.forEach((city) => {
       axios
-        .get(`${weather_base_URL}?key=${WEATHER_API_KEY}&q=${city}`)
+        .get(
+          `${weather_base_URL}/current.json?key=${WEATHER_API_KEY}&q=${city}`
+        )
         .then((response) => {
           majorCitiesWeather.push(response.data);
         })
@@ -38,5 +40,19 @@ module.exports = {
     });
     //   console.log(filteredArr)
     return res.status(200).send(filteredArr);
+  },
+  searchWeather: (req, res) => {
+    const { location } = req.query;
+    let cityData = []
+    axios
+      .get(
+        `${weather_base_URL}/search.json?key=${WEATHER_API_KEY}&q=${location}`
+      )
+      .then((response) => {
+         cityData.push(response.data[0]);
+         res.status(200).send(cityData);
+         return
+      })
+      .catch((err) => console.log(err));
   },
 };
