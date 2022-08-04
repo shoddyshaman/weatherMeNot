@@ -46,10 +46,10 @@ module.exports = {
     let cityData = []
     axios
       .get(
-        `${weather_base_URL}/search.json?key=${WEATHER_API_KEY}&q=${location}`
+        `${weather_base_URL}/current.json?key=${WEATHER_API_KEY}&q=${location}`
       )
       .then((response) => {
-         cityData.push(response.data[0]);
+         cityData.push(response.data);
          res.status(200).send(cityData);
          return
       })
